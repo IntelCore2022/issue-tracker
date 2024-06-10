@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import classNames from "classnames";
 
 const NavBar = () => {
-  const pathname = usePathname();
+  const pathname= usePathname();
   const links = [
     { href: "/", label: "Dashboard" },
     { href: "/issues", label: "Issues" },

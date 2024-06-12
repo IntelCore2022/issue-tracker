@@ -4,7 +4,7 @@ import React from "react";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 
-const newIssuePage = () => { 
+const IssuePage = () => { 
   return (
     <div className="max-w-xl space-y-4 p-5">
       <TextField.Root placeholder="Title" />
@@ -15,4 +15,4 @@ const newIssuePage = () => {
   );
 };
 
-export default newIssuePage;
+export default IssuePage;

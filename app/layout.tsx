@@ -23,7 +23,7 @@ export default function RootLayout({
       <Theme accentColor="iris">
           <NavBar></NavBar>
           <main>{children}</main>
-          <ThemePanel/>
+          {/* <ThemePanel/> */}
         </Theme>
       </body>
     </html>

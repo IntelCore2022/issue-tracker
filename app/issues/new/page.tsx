@@ -7,16 +7,22 @@ import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { issueScheme } from "@/app/valiadtionScheme";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
-type IssueForm = z.infer<typeof issueScheme>
+type IssueForm = z.infer<typeof issueScheme>;
 
 const IssuePage = () => {
   const [error, setError] = useState<string>("");
-  const { register, handleSubmit, control, formState:{errors}} = useForm<IssueForm>({
-    resolver: zodResolver(issueScheme)
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<IssueForm>({
+    resolver: zodResolver(issueScheme),
   });
   const router = useRouter();
   return (
@@ -25,11 +31,9 @@ const IssuePage = () => {
         {error && (
           <Callout.Root color="red">
             <Callout.Icon>
-              <InfoCircledIcon/>
+              <InfoCircledIcon />
             </Callout.Icon>
-            <Callout.Text>
-              {error}
-            </Callout.Text>
+            <Callout.Text>{error}</Callout.Text>
           </Callout.Root>
         )}
       </div>
@@ -49,7 +53,7 @@ const IssuePage = () => {
         })}
       >
         <TextField.Root placeholder="Title" {...register("title")} />
-        {errors.title && <Text as="p" color="red">{errors.title.message}</Text>}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -57,7 +61,7 @@ const IssuePage = () => {
             <SimpleMDE placeholder="Description" {...field}></SimpleMDE>
           )}
         ></Controller>
-        {errors.description && <Text as="p" color="red">{errors.description.message}</Text>}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button>Submit New Issue</Button>
       </form>
     </div>

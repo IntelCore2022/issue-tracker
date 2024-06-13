@@ -1,5 +1,5 @@
 "use client";
-import { Button, Callout, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Button, Callout, Spinner, Text, TextArea, TextField } from "@radix-ui/themes";
 import React, { useState } from "react";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
@@ -7,7 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { z } from "zod";
+import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { issueScheme } from "@/app/valiadtionScheme";
 import ErrorMessage from "@/app/components/ErrorMessage";
@@ -15,7 +15,9 @@ import ErrorMessage from "@/app/components/ErrorMessage";
 type IssueForm = z.infer<typeof issueScheme>;
 
 const IssuePage = () => {
+
   const [error, setError] = useState<string>("");
+  const [isSubmit, setSubmit] = useState(false);
   const {
     register,
     handleSubmit,
@@ -25,6 +27,21 @@ const IssuePage = () => {
     resolver: zodResolver(issueScheme),
   });
   const router = useRouter();
+  const submit = handleSubmit(async (data) => {
+    try {
+      setSubmit(true);
+      const res = await axios.post("/api/issues", data);
+      if (res.data.status !== 400) {
+        router.push("/issues");
+      } else {
+        setSubmit(false);
+        setError("Enter Valid Issue Details");
+      }
+    } catch (error) {
+      setSubmit(false);
+      setError("Error occured while creating issue");
+    }
+  });
   return (
     <div className="max-w-xl space-y-4 pl-5">
       <div>
@@ -39,18 +56,7 @@ const IssuePage = () => {
       </div>
       <form
         className="space-y-4"
-        onSubmit={handleSubmit(async (data) => {
-          try {
-            const res = await axios.post("/api/issues", data);
-            if (res.data.status !== 400) {
-              router.push("/issues");
-            } else {
-              setError("Enter Valid Issue Details");
-            }
-          } catch (error) {
-            setError("Error occured while creating issue");
-          }
-        })}
+        onSubmit={submit}
       >
         <TextField.Root placeholder="Title" {...register("title")} />
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
@@ -62,7 +68,7 @@ const IssuePage = () => {
           )}
         ></Controller>
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
-        <Button>Submit New Issue</Button>
+        <Button disabled={isSubmit}>Submit New Issue {isSubmit && <Spinner/>}</Button>
       </form>
     </div>
   );

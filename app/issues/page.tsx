@@ -1,8 +1,6 @@
 'use client'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { issueScheme } from "@/app/valiadtionScheme";
-import { z } from "zod";
 import { Button } from '@radix-ui/themes';
 import { useRouter } from 'next/navigation';
 

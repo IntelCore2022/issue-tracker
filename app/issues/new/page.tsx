@@ -1,5 +1,5 @@
 "use client";
-import { Button, Callout, Spinner, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Button, Callout, Spinner, TextField } from "@radix-ui/themes";
 import React, { useState } from "react";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
@@ -7,7 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { set, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { issueScheme } from "@/app/valiadtionScheme";
 import ErrorMessage from "@/app/components/ErrorMessage";

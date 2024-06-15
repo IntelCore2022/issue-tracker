@@ -5,7 +5,8 @@ export const issueScheme = z.object({
     description : z.string().min(1, 'Description is required').max(255),
 })
 
-export const authScheme = z.object({
+export const authSchema = z.object({
     username : z.string().min(1, 'Username is required').max(255),
     password : z.string().min(1, 'Password is required').max(255),
+    email : z.string().min(1, 'Password is required').max(255),
 })

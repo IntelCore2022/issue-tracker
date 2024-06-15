@@ -36,7 +36,12 @@ const IssuesPage = () => {
             <Button onClick={()=> {
               router.push(`/issues/${issue.id}`)
             }}>Edit</Button>
-            <Button>Delete</Button>
+            <Button
+              onClick={async ()=> {
+                const id = issue.id
+                await axios.delete('/api/issues', { data: { id } }).then(()=> setIssues(issues.filter((issue:IssueType)=> issue.id != id)));
+              }}
+            >Delete</Button>
           </div>
         )
       })

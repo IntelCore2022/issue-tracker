@@ -27,3 +27,10 @@ enum Status {
   IN_PROGRESS
   CLOSED
 }
+
+model User {
+  id       Int    @id 
+  email    String @unique @db.VarChar(255)
+  username String @unique @db.VarChar(255)
+  password String @db.VarChar(255)
+}

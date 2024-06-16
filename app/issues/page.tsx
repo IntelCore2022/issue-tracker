@@ -1,51 +1,77 @@
-'use client'
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Button } from '@radix-ui/themes';
-import { useRouter } from 'next/navigation';
+"use client";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Button, Table } from "@radix-ui/themes";
+import { useRouter } from "next/navigation";
 
 type IssueType = {
-  id : number,
-  title : string,
-  description : string
-  created_at : string
-}
-const IssuesPage = () => {
-  const router = useRouter()
-  const[issues, setIssues] = useState([])
-  useEffect( () => {
-    const fetchAllIssues = async ()=>{
-      try {
-        const response = await axios.get('/api/issues')
-        setIssues(response.data)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    fetchAllIssues();
-  }, [])
-  return (
-    <div>
-      {issues.map((issue : IssueType) => {
-        return (
-          <div key={issue.id} className='mb-5'>
-            <h2>title : {issue.title}</h2>
-            <p>description : {issue.description}</p>
-            <Button onClick={()=> {
-              router.push(`/issues/${issue.id}`)
-            }}>Edit</Button>
-            <Button
-              onClick={async ()=> {
-                const id = issue.id
-                await axios.delete('/api/issues', { data: { id } }).then(()=> setIssues(issues.filter((issue:IssueType)=> issue.id != id)));
-              }}
-            >Delete</Button>
-          </div>
-        )
-      })
-      }
-    </div>
-  )
-}
+  id: number;
+  title: string;
+  description: string;
+  created_at: string;
+};
 
-export default IssuesPage
+const IssuesPage = () => {
+  const router = useRouter();
+  const [issues, setIssues] = useState([]);
+  useEffect(() => {
+    const fetchAllIssues = async () => {
+      try {
+        const response = await axios.get("/api/issues");
+        setIssues(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAllIssues();
+  }, []);
+  return (
+    <div className="p-5">
+      <Table.Root>
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeaderCell>Title</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Options</Table.ColumnHeaderCell>
+          </Table.Row>
+        </Table.Header>
+        {issues.map((issue: IssueType) => {
+          return (
+            <Table.Row key={issue.id}>
+              <Table.RowHeaderCell>{issue.title}</Table.RowHeaderCell>
+              <Table.Cell>{issue.description}</Table.Cell>
+              <Table.Cell>
+                <Button
+                  color="green"
+                  onClick={() => {
+                    router.push(`/issues/${issue.id}`);
+                  }}
+                >
+                  Edit
+                </Button>
+                <span className="mx-4"></span>
+                <Button
+                  color="red"
+                  onClick={async () => {
+                    const id = issue.id;
+                    await axios
+                      .delete("/api/issues", { data: { id } })
+                      .then(() =>
+                        setIssues(
+                          issues.filter((issue: IssueType) => issue.id != id)
+                        )
+                      );
+                  }}
+                >
+                  Delete
+                </Button>
+              </Table.Cell>
+            </Table.Row>
+          );
+        })}
+      </Table.Root>
+    </div>
+  );
+};
+
+export default IssuesPage;

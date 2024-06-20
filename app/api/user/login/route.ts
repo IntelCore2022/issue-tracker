@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { z } from "zod";
+import jwt  from "jsonwebtoken";
+import bcrypt from "bcrypt"
 
 const loginSchema = z.object({
     username : z.string().min(1, 'Username is required').max(255),
     password : z.string().min(1, 'Password is required').max(255),
 })
+const SECRET_KEY:any = process.env.SECRET_KEY;
 
 export async function POST(request : NextRequest){
     try {
@@ -14,6 +17,7 @@ export async function POST(request : NextRequest){
         if(!validation.success){
             return NextResponse.json({error : validation.error.errors, status :  400});
         }
+
         const {username, password} = body;
         const user = await prisma.user.findUnique({
             where : {username}
@@ -21,11 +25,14 @@ export async function POST(request : NextRequest){
         if(!user){
             return NextResponse.json({error : 'User not found', status : 404});
         }
-        if(user.password !== password){
+        const token = jwt.sign({ body }, SECRET_KEY);
+        const hashPass = bcrypt.compareSync(password, user.password)
+        if(!hashPass){
             return NextResponse.json({error : 'Invalid password', status : 401});
         }
-        return NextResponse.json(user, {status : 200});
+        return NextResponse.json(token, {status : 200});
     } catch (error:any) {
+        console.log(error)
         return NextResponse.json({error : 'Failed to fetch user', details : error.message}, {status : 500});
     }
 }

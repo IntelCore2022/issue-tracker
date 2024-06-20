@@ -22,10 +22,12 @@ const Login = () => {
   const submit = handleSubmit(async (data) => {
     try {
       const res = await axios.post("/api/user/login", data);
-      if (res.data.status !== 400) {
+      if (res.status === 200) {
+        localStorage.setItem("token", res.data.token);
+        console.log("Successfully logged in");
         router.push('/');
       } else {
-        console.log(res.data.error);
+        console.log("Cannot fetch",res.status);
       }
     } catch (error) {
       console.error("Error occured while login");

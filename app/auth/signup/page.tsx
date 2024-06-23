@@ -18,9 +18,8 @@ const SignUP = () => {
   const submit = handleSubmit(async (data) => {
     try {
       const res = await axios.post("/api/user/signup", data);
-      if (res.data.status !== 400) {
+      if (res.data.status === 200) {
         console.log(res.data)
-        localStorage.setItem("token", res.data);
         router.push('/');
       } else {
         console.log(res.data.error);

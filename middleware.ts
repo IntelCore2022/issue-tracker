@@ -1,13 +1,28 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
- 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  localStorage.getItem("token")
-  return NextResponse.redirect(new URL('/home', request.url))
+import { NextRequest, NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
+
+const SECRET_KEY = new TextEncoder().encode(process.env.SECRET_KEY); // Ensure SECRET_KEY is set in your environment
+
+export async function middleware(request: NextRequest) {
+  const token = request.cookies.get('token')?.value;
+  console.log('token', token);
+
+  if (!token) {
+    return NextResponse.redirect(new URL('/auth/signup', request.url));
+  }
+
+  try {
+    const { payload } = await jwtVerify(token, SECRET_KEY);
+    console.log('user', payload);
+
+    return NextResponse.next();
+  } catch (error) {
+    console.error('JWT verification error:', error);
+
+    return NextResponse.redirect(new URL('/auth/login', request.url));
+  }
 }
- 
-// See "Matching Paths" below to learn more
+
 export const config = {
-  matcher: '/about/:path*',
-}
+  matcher: ['/issues/:path*'],
+};

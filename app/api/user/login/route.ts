@@ -24,13 +24,19 @@ export async function POST(request : NextRequest){
         })
         if(!user){
             return NextResponse.json({error : 'User not found', status : 404});
-        }
-        const token = jwt.sign({ body }, SECRET_KEY);
+        } 
         const hashPass = bcrypt.compareSync(password, user.password)
         if(!hashPass){
             return NextResponse.json({error : 'Invalid password', status : 401});
         }
-        return NextResponse.json(token, {status : 200});
+        const token = jwt.sign({ body }, SECRET_KEY);
+        const response = NextResponse.json({user, status : 200});
+        response.cookies.set('token', token, {
+            httpOnly : true,
+            expires : new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        });
+
+        return response; 
     } catch (error:any) {
         console.log(error)
         return NextResponse.json({error : 'Failed to fetch user', details : error.message}, {status : 500});

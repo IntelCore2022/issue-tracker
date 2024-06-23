@@ -19,11 +19,16 @@ export async function POST(request : NextRequest){
     if(user){
         return NextResponse.json({error : 'User already exists', status : 400});
     }
-    const token = jwt.sign({ body }, SECRET_KEY);
     const salt = bcrypt.genSaltSync(12)
     const hashPass = bcrypt.hashSync(password, salt);
     await prisma.user.create({
         data : {username, password:hashPass, email}
     })
-    return NextResponse.json(token, {status : 200});
+    const token = jwt.sign({ body }, SECRET_KEY);
+    const response = NextResponse.json({user, status : 200});
+    response.cookies.set('token', token, {
+        httpOnly : true,
+        expires : new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    });
+    return response;
 }

@@ -2,7 +2,7 @@
 import { useParams, useRouter } from "next/navigation"; 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Callout, Spinner, TextField } from "@radix-ui/themes";
+import { Button, Callout, Spinner, Text, TextField } from "@radix-ui/themes";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { Controller, useForm } from "react-hook-form";
@@ -11,6 +11,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { issueScheme } from "@/app/valiadtionScheme";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Markdown from "react-markdown";
 
 type IssueForm = z.infer<typeof issueScheme>;
 
@@ -74,7 +75,7 @@ const UpdateIssuePage = () => {
   }
 
   return (
-    <div className="max-w-xl space-y-4 pl-5">
+    <div className="max-w-xl py-5 space-y-4 px-5">
       <div>
         {error && (
           <Callout.Root color="red">

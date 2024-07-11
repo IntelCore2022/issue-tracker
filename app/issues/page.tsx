@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
+import Markdown from 'react-markdown';
 
 type IssueType = {
   id: number;
@@ -28,8 +29,8 @@ const IssuesPage = () => {
   return (
     <div className="p-5">
       <Table.Root>
-        <Table.Header>
-          <Table.Row>
+        <Table.Header >
+          <Table.Row >
             <Table.ColumnHeaderCell>Title</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Options</Table.ColumnHeaderCell>
@@ -38,9 +39,9 @@ const IssuesPage = () => {
         {issues.map((issue: IssueType) => {
           return (
             <Table.Row key={issue.id}>
-              <Table.RowHeaderCell>{issue.title}</Table.RowHeaderCell>
-              <Table.Cell>{issue.description}</Table.Cell>
-              <Table.Cell>
+              <Table.Cell className="w-[10rem]">{issue.title}</Table.Cell>
+              <Table.Cell className=""><Markdown>{issue.description}</Markdown></Table.Cell>
+              <Table.Cell className="w-[18rem]">
                 <Button
                   color="green"
                   onClick={() => {

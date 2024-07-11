@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Theme accentColor="iris">
           <NavBar></NavBar>
-          <main>{children}</main>
+          <main className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative h-screen">{children}</main>
         </Theme>
       </body>
     </html>

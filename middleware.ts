@@ -5,7 +5,6 @@ const SECRET_KEY = new TextEncoder().encode(process.env.SECRET_KEY); // Ensure S
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
-  console.log('token', token);
 
   if (!token) {
     return NextResponse.redirect(new URL('/auth/signup', request.url));
@@ -13,7 +12,6 @@ export async function middleware(request: NextRequest) {
 
   try {
     const { payload } = await jwtVerify(token, SECRET_KEY);
-    console.log('user', payload);
 
     return NextResponse.next();
   } catch (error) {

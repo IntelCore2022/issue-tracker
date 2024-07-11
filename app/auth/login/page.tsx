@@ -1,12 +1,12 @@
 "use client";
-import { Button, Card, Text, TextField } from "@radix-ui/themes";
+import { Button, Card, Spinner, Text, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { set, z } from "zod";
 import Link from "next/link";
 import ErrorMessage from "@/app/components/ErrorMessage";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const authSchema = z.object({
   username : z.string().min(1, "username is required").max(255),
@@ -15,21 +15,27 @@ const authSchema = z.object({
 
 type loginSchema = z.infer<typeof authSchema>;
 const Login = () => {
-  const router = useRouter();
+  const [isSubmit, setSubmit] = useState(false);
+  const[error, setError] = useState<string>("")
   const { register, formState:{errors}, handleSubmit } = useForm<loginSchema>({
     resolver: zodResolver(authSchema),
   });
   const submit = handleSubmit(async (data) => {
     try {
+      setSubmit(true);
       const res = await axios.post("/api/user/login", data);
       console.log(res.data);
       if (res.data.status === 200) {
+        setError("");
         console.log("Successfully logged in");
-        router.push('/');
+        window.location.href = "/";
       } else {
+        setSubmit(false);
+        setError("Please enter valid credentials");
         console.log("Cannot fetch",res.data.status);
       }
     } catch (error) {
+      setSubmit(false);
       console.error("Error occured while login");
     }
   }
@@ -54,7 +60,8 @@ const Login = () => {
             ></TextField.Root>
             <ErrorMessage>{errors.password?.message}</ErrorMessage>
           </div>
-          <Button type="submit">Login</Button>
+          <Button type="submit" disabled={isSubmit}>Login {isSubmit && <Spinner/>}</Button>
+          <Text as="p" color="red">{error}</Text>
           <Text as="p">New user? <Link className="text-blue-700 hover:text-blue-500" href='/auth/signup'>signup</Link></Text>
         </form>
       </Card>

@@ -8,7 +8,7 @@ export const ProfileDrop = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -29,8 +29,8 @@ export const ProfileDrop = () => {
     }
   };
 
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setIsOpen(false);
     }
   };
@@ -58,11 +58,6 @@ export const ProfileDrop = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  // if (!user) {
-  //   console.error("User not found");
-  //   return <div></div>; // Render nothing if user is not found
-  // }
 
   return (
     <div className="mt-2 inline-block text-left" ref={dropdownRef}>
@@ -92,22 +87,23 @@ export const ProfileDrop = () => {
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            {user ? <button
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-              role="menuitem"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-            :
-            <button
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-              role="menuitem"
-              onClick={()=> router.push('/auth/signup')}
-            >
-              Sign Up
-            </button>
-            }
+            {user ? (
+              <button
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                role="menuitem"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                role="menuitem"
+                onClick={() => router.push('/auth/signup')}
+              >
+                Sign Up
+              </button>
+            )}
           </div>
         </div>
       )}

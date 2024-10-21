@@ -8,7 +8,7 @@ export default function Home() {
         <h1 className='text-5xl font-bold text-white mb-6'>Welcome to Our Issue Tracker</h1>
         <p className='text-xl text-white mb-12'>Track and manage all your project issues in one place</p>
         <Button asChild>
-          <Link href='/issues/new'>New Issues</Link>
+          <Link href='/issues/new'>Old Issues</Link>
         </Button>
       </div>
     </main>
